@@ -5,6 +5,12 @@
  */
 package main;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -19,9 +25,9 @@ public class ServerGUI extends javax.swing.JFrame {
     public ServerGUI() {
         initComponents();
     }
-    
-     public ServerImplement server;
-     
+
+    public ServerImplement server;
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,6 +105,11 @@ public class ServerGUI extends javax.swing.JFrame {
 
         btnStop.setText("Stop");
         btnStop.setEnabled(false);
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("HOST:");
 
@@ -236,7 +247,28 @@ public class ServerGUI extends javax.swing.JFrame {
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         server = new ServerImplement(this);
+        JOptionPane.showMessageDialog(null, "Server Started !!!");
     }//GEN-LAST:event_btnStartActionPerformed
+     private void xoatable(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+    }
+     
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        try {
+            server.stop();
+            JOptionPane.showMessageDialog(null, "Server Stopped");
+            btnStart.setEnabled(true);
+            btnStop.setEnabled(false);
+            txtHost.setText(null);
+            txtIp.setText(null);
+            txtPort.setText(null);
+            xoatable(clientList);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+
+    }//GEN-LAST:event_btnStopActionPerformed
 
     /**
      * @param args the command line arguments

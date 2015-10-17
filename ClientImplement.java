@@ -5,10 +5,8 @@
  */
 package main;
 
-import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.JOptionPane;
-
 /**
  *
  * @author Danh Cooper
@@ -16,21 +14,17 @@ import javax.swing.JOptionPane;
 public class ClientImplement {
     String ServerIP;
     static public Socket socket;
-    ClientGUI cGUI = new ClientGUI();
+    static public ClientGUI cGUI;
+   
     public ClientImplement(String IP) {
 		
         try {
             ServerIP = IP;
-            socket = new Socket(ServerIP, 5000);   
-            
-            cGUI.setVisible(true);
-           // new Thread(new rthread(socket, namdau)).start();
-            //new Thread(new sthread(socket, 0)).start();
-				//namdau.setVisible(true);
-            //});
-           // clientListener = new ServerSocket(5678);
-            //new Thread(new ServerListeningThread(clientListener, namdau)).start();
+            socket = new Socket(ServerIP, 5000);
+            cGUI = new ClientGUI();
             JOptionPane.showMessageDialog(null, "successfully connected to server!!!");
+            new Thread(new sendThread(socket, 0)).start();
+            new Thread(new receiveThread(socket, cGUI)).start();
 
         } catch (Exception e) {
             System.err.println(e);

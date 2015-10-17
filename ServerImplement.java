@@ -5,6 +5,7 @@
  */
 package main;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,8 +39,9 @@ public class ServerImplement implements Runnable {
             frame.btnStop.setEnabled(true);
             frame.jLabel5.setText("Started");
             start();
+            
             //System.out.println("server start???");
-
+            
         } catch (Exception ioe) {
             JOptionPane.showMessageDialog(null, ioe);
         }
@@ -51,14 +53,19 @@ public class ServerImplement implements Runnable {
             thread.start();
         }
     }
+    public void stop() throws IOException {       
+        socket.close();
+        thread.stop();
+    }
     
     @Override
     public void run() {
         while (thread != null) {
             try {
                 Socket client = socket.accept();
-                writeInfoFileJTable(client, frame.clientList);
-                
+                writeInfoFileJTable(client, frame.clientList); 
+                 
+                new Thread(new receiveThread(client, frame)).start();
             }
             catch(Exception e){
                 JOptionPane.showMessageDialog(null, e);
@@ -70,6 +77,6 @@ public class ServerImplement implements Runnable {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{Integer.toString(i+1),so.getInetAddress().toString(),
             String.valueOf(so.getPort())});
-    }
+    }   
     
 }
