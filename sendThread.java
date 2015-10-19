@@ -47,15 +47,15 @@ public class sendThread implements Runnable {
                         
                         tmp += b[i];
                         if( i!= b.length -1) tmp +=";";
-                    }
-                    
+                        
+                    }                    
                     ps.println(tmp);
                     //ps.println("END");
                     break;
                 }
                 case (0): {
                     ps = new PrintStream(client.getOutputStream());
-                    ps.println("NEED_UPDATE END");                    
+                    ps.println("NEED_UPDATE END");                   
                     break;
                 }
 

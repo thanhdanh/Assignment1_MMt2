@@ -18,65 +18,67 @@ import javax.swing.table.DefaultTableModel;
  * @author Danh Cooper
  */
 public class ServerImplement implements Runnable {
+
     private ServerSocket socket;
     private int port = 5000;
     static ServerGUI frame;
     public Thread thread = null;
     InetAddress ip;
-    
+
     public ServerImplement(ServerGUI frameName) {
-        try {           
+        try {
             socket = new ServerSocket(port);
             ip = InetAddress.getLocalHost();
             port = socket.getLocalPort();
-            
+
             frame = frameName;
             frame.txtHost.setText(ip.getHostName());
-            frame.txtIp.setText(ip.getHostAddress()); 
-            frame.txtPort.setText(Integer.toString(port)); 
-            
+            frame.txtIp.setText(ip.getHostAddress());
+            frame.txtPort.setText(Integer.toString(port));
+
             frame.btnStart.setEnabled(false);
             frame.btnStop.setEnabled(true);
             frame.jLabel5.setText("Started");
             start();
-            
+
             //System.out.println("server start???");
-            
         } catch (Exception ioe) {
             JOptionPane.showMessageDialog(null, ioe);
         }
     }
-    
+
     public void start() {
         if (thread == null) {
             thread = new Thread(this);
             thread.start();
         }
     }
-    public void stop() throws IOException {       
+
+    public void stop() throws IOException {
         socket.close();
         thread.stop();
     }
-    
+
     @Override
     public void run() {
         while (thread != null) {
             try {
                 Socket client = socket.accept();
-                writeInfoFileJTable(client, frame.clientList); 
-                 
+                writeInfoFileJTable(client, frame.clientList);
+
                 new Thread(new receiveThread(client, frame)).start();
-            }
-            catch(Exception e){
+
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
     }
+
     private void writeInfoFileJTable(Socket so, JTable table) {
         int i = table.getRowCount();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{Integer.toString(i+1),so.getInetAddress().toString(),
+        model.addRow(new Object[]{Integer.toString(i + 1), so.getInetAddress().toString(),
             String.valueOf(so.getPort())});
-    }   
-    
+    }
+
 }

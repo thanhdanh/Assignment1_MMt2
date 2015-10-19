@@ -16,11 +16,11 @@ public class ClientGUI extends javax.swing.JFrame {
     /**
      * Creates new form ClientGUI
      */
-    Socket socket;
-    public String ServerIP;
-    public ClientGUI()  {
+    public Socket socket;
+     
+    public ClientGUI(Socket so)  {
         initComponents();    
-        
+        socket =so;
         this.setLocation(500, 100);
         this.setResizable(false);     
         this.setVisible(true);
@@ -138,7 +138,7 @@ public class ClientGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addGap(120, 120, 120)
+                .addGap(143, 143, 143)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4))
@@ -163,7 +163,9 @@ public class ClientGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-         //new Thread(new sendThread(socket, 0)).start();     
+        new Thread(new sendThread(socket, 0)).start();
+        new Thread(new receiveThread(socket, this)).start();
+       
     }//GEN-LAST:event_btnUpdateActionPerformed
     
     /**

@@ -32,11 +32,13 @@ public class receiveThread implements Runnable {
     public receiveThread(Socket so, ServerGUI sgui) {
         client = so;
         sGUI = sgui;
+        thisTable = sGUI.clientList;
     }
 
     public receiveThread(Socket so, ClientGUI cgui) {
         client = so;
         cGUI = cgui;
+        thisTable = cGUI.clientList;
     }
 
     private void writeInfoFileJTable(JTable table, String[] list) {
@@ -62,31 +64,27 @@ public class receiveThread implements Runnable {
 
             String tmp = receive.readLine();
 
-            while (flag) {
+            
                 mess = tmp.split(" ");
                 switch (mess[0]) {
-                    case ("NEED_UPDATE"): {
-                        thisTable = sGUI.clientList;
+                    case ("NEED_UPDATE"): {                        
                         int i;
                         String[] list = new String[thisTable.getRowCount()];
                         for (i = 0; i < thisTable.getRowCount(); i++) {
-                            list[i] = thisTable.getValueAt(i, 1).toString();
-                        }
-
+                            list[i] = thisTable.getValueAt(i, 1).toString();                        }                        
                         new Thread(new sendThread(client, list, 1)).start();
-
+                        System.out.println("SEND UPDATE");
                         break;
                     }
-                    case ("UPDATE"): {
-                        thisTable = cGUI.clientList;
+                    case ("UPDATE"): {                        
                         String list1 = receive.readLine();
                         String[] listArray = list1.split(";");
-                        xoatable(thisTable);
-                        writeInfoFileJTable(thisTable, listArray);
+                        xoatable(thisTable);                        
+                        writeInfoFileJTable(thisTable, listArray);                       
                         break;
                     }
                 }
-            }
+           
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
