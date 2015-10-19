@@ -22,9 +22,11 @@ public class ClientImplement {
             ServerIP = IP;
             socket = new Socket(ServerIP, 5000);
             cGUI = new ClientGUI(socket);
-            JOptionPane.showMessageDialog(null, "successfully connected to server!!!");
+            
             new Thread(new sendThread(socket, 0)).start();
             new Thread(new receiveThread(socket, cGUI)).start();
+            
+            JOptionPane.showMessageDialog(null, "successfully connected to server!!!");
 
         } catch (Exception e) {
             System.err.println(e);

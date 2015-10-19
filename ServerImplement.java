@@ -40,7 +40,6 @@ public class ServerImplement implements Runnable {
             frame.btnStop.setEnabled(true);
             frame.jLabel5.setText("Started");
             start();
-
             //System.out.println("server start???");
         } catch (Exception ioe) {
             JOptionPane.showMessageDialog(null, ioe);
@@ -56,18 +55,18 @@ public class ServerImplement implements Runnable {
 
     public void stop() throws IOException {
         socket.close();
-        thread.stop();
+        thread.interrupt();
     }
 
     @Override
     public void run() {
         while (thread != null) {
             try {
-                Socket client = socket.accept();
-                writeInfoFileJTable(client, frame.clientList);
-
-                new Thread(new receiveThread(client, frame)).start();
-
+                while (true) {
+                    Socket client = socket.accept();                
+                    writeInfoFileJTable(client, frame.clientList);
+                    new Thread(new receiveThread(client, frame)).start();
+                }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e);
             }

@@ -30,15 +30,15 @@ public class receiveThread implements Runnable {
     }
 
     public receiveThread(Socket so, ServerGUI sgui) {
-        client = so;
-        sGUI = sgui;
-        thisTable = sGUI.clientList;
+        this.client = so;
+        this.sGUI = sgui;
+        this.thisTable = sGUI.clientList;
     }
 
     public receiveThread(Socket so, ClientGUI cgui) {
-        client = so;
-        cGUI = cgui;
-        thisTable = cGUI.clientList;
+        this.client = so;
+        this.cGUI = cgui;
+        this.thisTable = cGUI.clientList;
     }
 
     private void writeInfoFileJTable(JTable table, String[] list) {
@@ -62,21 +62,21 @@ public class receiveThread implements Runnable {
             receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
             boolean flag = true;
 
-            String tmp = receive.readLine();
-
-            
+            String tmp;
+            while(flag){    
+                tmp= receive.readLine();
                 mess = tmp.split(" ");
                 switch (mess[0]) {
-                    case ("NEED_UPDATE"): {                        
+                    case "NEED_UPDATE": {                        
                         int i;
                         String[] list = new String[thisTable.getRowCount()];
                         for (i = 0; i < thisTable.getRowCount(); i++) {
                             list[i] = thisTable.getValueAt(i, 1).toString();                        }                        
                         new Thread(new sendThread(client, list, 1)).start();
-                        System.out.println("SEND UPDATE");
+                        System.out.println("RECIEVE UPDATE -> SEND UPDATE");
                         break;
                     }
-                    case ("UPDATE"): {                        
+                    case "UPDATE": {                        
                         String list1 = receive.readLine();
                         String[] listArray = list1.split(";");
                         xoatable(thisTable);                        
@@ -84,7 +84,7 @@ public class receiveThread implements Runnable {
                         break;
                     }
                 }
-           
+            }
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);

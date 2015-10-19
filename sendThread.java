@@ -24,13 +24,13 @@ public class sendThread implements Runnable {
 
     public sendThread(Socket so, String[] danhsachcapnhat, int cmd) throws IOException {
       
-        client = so;
+        this.client = so;
         command = cmd;
         b=danhsachcapnhat;
     }
 
     public sendThread(Socket so, int cmd) {
-        client = so;
+        this.client = so;
         command = cmd;
     }
 
@@ -38,7 +38,7 @@ public class sendThread implements Runnable {
     public void run() {
         try {
             switch (command) {
-                case (1): { // CASE UPDATE CLIENT LIST-- sent FROM server 
+                case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
                     int i;
                     ps = new PrintStream(client.getOutputStream());
                     ps.println("UPDATE");
@@ -50,12 +50,14 @@ public class sendThread implements Runnable {
                         
                     }                    
                     ps.println(tmp);
+                    System.out.println("Send UPDATE");
                     //ps.println("END");
                     break;
                 }
-                case (0): {
+                case 0: {
                     ps = new PrintStream(client.getOutputStream());
-                    ps.println("NEED_UPDATE END");                   
+                    ps.println("NEED_UPDATE END"); 
+                    System.out.println("Send NEED UPDATE");
                     break;
                 }
 
