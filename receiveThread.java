@@ -58,7 +58,7 @@ public class receiveThread implements Runnable {
     public void run() {
         try {
             BufferedReader receive = null;
-            String[] mess = new String[50];
+            String[] mess = new String[100];
             receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
             boolean flag = true;
 
@@ -73,11 +73,12 @@ public class receiveThread implements Runnable {
                         for (i = 0; i < thisTable.getRowCount(); i++) {
                             list[i] = thisTable.getValueAt(i, 1).toString();                        }                        
                         new Thread(new sendThread(client, list, 1)).start();
-                        System.out.println("RECIEVE UPDATE -> SEND UPDATE");
+                        System.out.println("RECIEVE NEED_UPDATE -> SEND UPDATE");
                         break;
                     }
                     case "UPDATE": {                        
-                        String list1 = receive.readLine();
+                        String list1 = mess[1];
+                        System.out.println("RECIEVE UPDATE AND WRITE TO TABLE");
                         String[] listArray = list1.split(";");
                         xoatable(thisTable);                        
                         writeInfoFileJTable(thisTable, listArray);                       
@@ -87,7 +88,7 @@ public class receiveThread implements Runnable {
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            
         }
     }
 

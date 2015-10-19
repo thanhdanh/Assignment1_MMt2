@@ -42,7 +42,7 @@ public class ServerImplement implements Runnable {
             start();
             //System.out.println("server start???");
         } catch (Exception ioe) {
-            JOptionPane.showMessageDialog(null, ioe);
+            JOptionPane.showMessageDialog(null, "Error: "+ ioe);
         }
     }
 
