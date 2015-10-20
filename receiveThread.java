@@ -9,9 +9,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import static main.ClientImplement.socket;
 
 /**
  *
@@ -24,7 +24,8 @@ public class receiveThread implements Runnable {
     JTable thisTable;
     ServerGUI sGUI;
     ClientGUI cGUI;
-
+    public Thread thread = null;
+    
     public receiveThread(Socket so) {
         client = so;
     }
@@ -53,19 +54,26 @@ public class receiveThread implements Runnable {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
     }
-
+  
     @Override
     public void run() {
         try {
             BufferedReader receive = null;
-            String[] mess = new String[100];
+            String[] mess = new String[5];
             receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
             boolean flag = true;
 
-            String tmp;
-            while(flag){    
+            String tmp=new String();
+            while(flag){   
                 tmp= receive.readLine();
+                
+                if(tmp.isEmpty()){
+                    new Thread(new receiveThread(socket, cGUI)).start();
+                    new Thread(new sendThread(socket, 0)).start();
+                    break;
+                };
                 mess = tmp.split(" ");
+                System.out.println(">>>>>>>tmp:"+tmp +" and mess[0]:"+mess[0] );
                 switch (mess[0]) {
                     case "NEED_UPDATE": {                        
                         int i;
@@ -73,10 +81,10 @@ public class receiveThread implements Runnable {
                         for (i = 0; i < thisTable.getRowCount(); i++) {
                             list[i] = thisTable.getValueAt(i, 1).toString();                        }                        
                         new Thread(new sendThread(client, list, 1)).start();
-                        System.out.println("RECIEVE NEED_UPDATE -> SEND UPDATE");
+                        System.out.println("RECIEVE NEED_UPDATE");
                         break;
                     }
-                    case "UPDATE": {                        
+                    case "UPDATE": {                      
                         String list1 = mess[1];
                         System.out.println("RECIEVE UPDATE AND WRITE TO TABLE");
                         String[] listArray = list1.split(";");
@@ -86,6 +94,7 @@ public class receiveThread implements Runnable {
                     }
                 }
             }
+           // Thread.sleep(500);
 
         } catch (Exception ex) {
             

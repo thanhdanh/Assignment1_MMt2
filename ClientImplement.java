@@ -23,8 +23,8 @@ public class ClientImplement {
             socket = new Socket(ServerIP, 5000);
             cGUI = new ClientGUI(socket);
             
-            new Thread(new sendThread(socket, 0)).start();
             new Thread(new receiveThread(socket, cGUI)).start();
+            new Thread(new sendThread(socket, 0)).start();            
             
             JOptionPane.showMessageDialog(null, "successfully connected to server!!!");
 

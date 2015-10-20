@@ -38,7 +38,14 @@ public class sendThread implements Runnable {
     public void run() {
         try {
             switch (command) {
-                case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
+                
+                case 0: {
+                    ps = new PrintStream(client.getOutputStream());
+                    ps.println("NEED_UPDATE END ");
+                    System.out.println("Send NEED_UPDATE request");
+                    break;
+                }
+                  case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
                     int i;
                     ps = new PrintStream(client.getOutputStream());
                    
@@ -49,19 +56,15 @@ public class sendThread implements Runnable {
                             tmp += ";";
                         }
                     }
-                    ps.println("UPDATE "+ tmp+ " END");
-                    System.out.println("Send UPDATE");
+                    ps.println("UPDATE "+ tmp+ " END ");
+                    
+                    System.out.println("Send UPDATE string5:"+tmp+"/" );
                     //ps.println("END");
-                    break;
-                }
-                case 0: {
-                    ps = new PrintStream(client.getOutputStream());
-                    ps.println("NEED_UPDATE END");
-                    System.out.println("Send NEED UPDATE");
                     break;
                 }
 
             }
+           // Thread.sleep(500);
         } catch (Exception e) {
 
         }

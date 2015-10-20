@@ -6,6 +6,8 @@
 package main;
 
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -163,9 +165,9 @@ public class ClientGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        
         new Thread(new sendThread(socket, 0)).start();
         new Thread(new receiveThread(socket, this)).start();
-       
     }//GEN-LAST:event_btnUpdateActionPerformed
     
     /**
