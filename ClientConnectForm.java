@@ -5,9 +5,7 @@
  */
 package main;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -16,6 +14,11 @@ import java.util.logging.Logger;
 public class ClientConnectForm extends javax.swing.JFrame {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Creates new form ClientConnectForm
      */
     public ClientConnectForm() {
@@ -31,7 +34,6 @@ public class ClientConnectForm extends javax.swing.JFrame {
     
     public ClientImplement cI;
     
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

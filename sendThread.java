@@ -16,7 +16,6 @@ import javax.swing.JTable;
  */
 public class sendThread implements Runnable {
 
-    PrintStream ps;
     Socket client;
     JTable tableList;
     public String[] b = new String[10];
@@ -37,18 +36,17 @@ public class sendThread implements Runnable {
     @Override
     public void run() {
         try {
-            switch (command) {
+        	PrintStream ps;
+        	ps = new PrintStream(client.getOutputStream());
+        	switch (command) {
                 
                 case 0: {
-                    ps = new PrintStream(client.getOutputStream());
                     ps.println("NEED_UPDATE END ");
                     System.out.println("Send NEED_UPDATE request");
                     break;
                 }
                   case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
                     int i;
-                    ps = new PrintStream(client.getOutputStream());
-                   
                     String tmp = "";
                     for (i = 0; i < b.length; i++) {
                         tmp += b[i];
@@ -58,13 +56,15 @@ public class sendThread implements Runnable {
                     }
                     ps.println("UPDATE "+ tmp+ " END ");
                     
-                    System.out.println("Send UPDATE string5:"+tmp+"/" );
-                    //ps.println("END");
                     break;
                 }
+                 case 2:{
+                	 ps.println("BYE END"); 
+                	 break;
+                  }
 
             }
-           // Thread.sleep(500);
+        
         } catch (Exception e) {
 
         }

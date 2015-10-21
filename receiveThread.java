@@ -6,12 +6,14 @@
 package main;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import static main.ClientImplement.socket;
 
 /**
  *
@@ -21,7 +23,7 @@ public class receiveThread implements Runnable {
 
     PrintStream ps;
     Socket client;
-    JTable thisTable;
+//    JTable thisTable;
     ServerGUI sGUI;
     ClientGUI cGUI;
     public Thread thread = null;
@@ -33,13 +35,13 @@ public class receiveThread implements Runnable {
     public receiveThread(Socket so, ServerGUI sgui) {
         this.client = so;
         this.sGUI = sgui;
-        this.thisTable = sGUI.clientList;
+       // this.thisTable = sGUI.clientList;
     }
 
     public receiveThread(Socket so, ClientGUI cgui) {
         this.client = so;
         this.cGUI = cgui;
-        this.thisTable = cGUI.clientList;
+        //this.thisTable = cGUI.clientList;
     }
 
     private void writeInfoFileJTable(JTable table, String[] list) {
@@ -57,48 +59,102 @@ public class receiveThread implements Runnable {
   
     @Override
     public void run() {
+    	BufferedReader receive = null;
+        String[] mess = new String[100];
         try {
-            BufferedReader receive = null;
-            String[] mess = new String[5];
-            receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            boolean flag = true;
-
+			receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        boolean flag = true;
+    	try {
+            
             String tmp=new String();
             while(flag){   
                 tmp= receive.readLine();
-                
-                if(tmp.isEmpty()){
-                    new Thread(new receiveThread(socket, cGUI)).start();
-                    new Thread(new sendThread(socket, 0)).start();
-                    break;
-                };
+//                if(tmp.isEmpty()){
+//                    new Thread(new sendThread(socket, 0)).start();
+//                    break;
+//                };               
                 mess = tmp.split(" ");
                 System.out.println(">>>>>>>tmp:"+tmp +" and mess[0]:"+mess[0] );
                 switch (mess[0]) {
                     case "NEED_UPDATE": {                        
+                    	System.out.println("received update request! processing ... ... ...");
                         int i;
-                        String[] list = new String[thisTable.getRowCount()];
-                        for (i = 0; i < thisTable.getRowCount(); i++) {
-                            list[i] = thisTable.getValueAt(i, 1).toString();                        }                        
+                        String[] list = new String[sGUI.clientList.getRowCount()];
+                        for (i = 0; i < sGUI.clientList.getRowCount(); i++) {
+                            list[i] = sGUI.clientList.getValueAt(i, 1).toString();                        }                        
                         new Thread(new sendThread(client, list, 1)).start();
-                        System.out.println("RECIEVE NEED_UPDATE");
+                        System.out.println("updated list sent!!!");
                         break;
                     }
                     case "UPDATE": {                      
-                        String list1 = mess[1];
-                        System.out.println("RECIEVE UPDATE AND WRITE TO TABLE");
+                        String list1 = mess[mess.length-2];
+                    	System.out.println("danh sach nhan duoc: "+mess[mess.length-2]);
+                        System.out.println("list1 before split: "+list1);      
+                        System.out.println("received updated list! adding to table ... ... ...");
                         String[] listArray = list1.split(";");
-                        xoatable(thisTable);                        
-                        writeInfoFileJTable(thisTable, listArray);                       
+                        for (int i=0;i<listArray.length;i++){
+                        	System.out.println("listArray["+i+"]: "+listArray[i]);
+                        	}
+                        xoatable(cGUI.clientList);                        
+                        writeInfoFileJTable(cGUI.clientList, listArray);
+                        System.out.println("added to table!!!");
+                        break;
+                    }
+                    case "BYE":{
+                    	saybye2client(client.getInetAddress().toString());
+                    	System.out.println("client "+client.getInetAddress()+ " is disconnecting ... ... ...");
+                        receive.close();
+                        client.close();
+                        flag = false;
+                        System.out.println("disconnected!!!");
                         break;
                     }
                 }
             }
-           // Thread.sleep(500);
-
+           
         } catch (Exception ex) {
-            
+        	flag = false;
+            if (client.getLocalPort() == 5000) {
+                // client down
+                saybye2client(client.getRemoteSocketAddress().toString());
+                try {
+                    receive.close();
+                    client.close();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                }
+            else {// server down
+                JOptionPane
+                        .showMessageDialog(
+                                cGUI,
+                                "Server has been shutdown unexpectedly!!!\n"
+                                + "you can't update list from the server but you still can call your friends existing in your list\n"
+                                + "you can try to connect to server later\n"
+                                + "we're sorry for this\n");
+
+            }
+            }
+    	}
+
+
+private void saybye2client(String a) {
+    String cliadd;
+    cliadd = a;
+    for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
+        if (cliadd.equals(sGUI.clientList.getValueAt(i, 1).toString())) {
+            xoarow(sGUI.clientList, i);
         }
     }
-
+    
+}
+private void xoarow(JTable table, int row) {
+    DefaultTableModel model = (DefaultTableModel) table.getModel();
+    model.removeRow(row);
+}
 }
