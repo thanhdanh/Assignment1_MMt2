@@ -8,6 +8,7 @@ package main;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
@@ -32,7 +33,7 @@ public class sendThread implements Runnable {
         this.client = so;
         command = cmd;
     }
-   
+
     @Override
     public void run() {
         try {
@@ -41,7 +42,7 @@ public class sendThread implements Runnable {
             switch (command) {
 
                 case 0: {
-                    ps.println("NEED_UPDATE END ");
+                    ps.println("NEED_UPDATE END");
                     System.out.println("Send NEED_UPDATE request");
                     break;
                 }
@@ -54,7 +55,7 @@ public class sendThread implements Runnable {
                             tmp += ";";
                         }
                     }
-                    ps.println("UPDATE " + tmp + " END ");
+                    ps.println("UPDATE " + tmp + " END");
 
                     break;
                 }
@@ -63,14 +64,43 @@ public class sendThread implements Runnable {
                     break;
                 }
                 case 3: {
-                    ps.println("LIVE_APPEAR END");
+                    int i;
+                    String tmp = "";
+                    for (i = 0; i < b.length; i++) {
+                        tmp += b[i];
+                        if (i != b.length - 1) {
+                            tmp += ",";
+                        }
+                    }
+                    ps.println("LIVE_APPEAR " + tmp + " END");
+                    System.out.println("sent from client live_appear");
+                    break;
+                }
+                case 4: {
+                    ps.println("NEED_UP_LI END");
+                    System.out.println("sent from client need update live audio");
+                    break;
+                }
+                case 5: {
+                    int i;
+                    String tmp = "";
+
+                    for (i = 0; i < b.length; i++) {
+                        tmp += b[i];
+                        if (i != b.length - 1) {
+                            tmp += ";";
+                        }
+                    }
+                    ps.println("LI_UPDATE " + tmp + " END");
+                    System.out.println("sent from server live list!!!");
+
                     break;
                 }
 
             }
 
         } catch (Exception e) {
-
+            JOptionPane.showMessageDialog(null, "Error tai send: " + e);
         }
 
     }

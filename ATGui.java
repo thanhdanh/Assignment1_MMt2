@@ -8,6 +8,7 @@ package main;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.MediaLocator;
@@ -259,21 +260,32 @@ public class ATGui extends javax.swing.JFrame {
     }
     private void btnTransmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransmitActionPerformed
         if (checkInput()) { 
-            String mediaURL = "";
-            if (radioFile.isSelected()){
-                mediaURL= "file://"+txtSourceURL.getText();
+            try {
+                String mediaURL = "";
+                if (radioFile.isSelected()){
+                    mediaURL= "file://"+txtSourceURL.getText();
+                }
+                else {
+                    mediaURL= "javasound://44100";
+                }
+                
+                at = new AudioTransmit(new MediaLocator( mediaURL),
+                        txtDestIP.getText(),
+                        txtDestPort.getText());
+                thread = new Thread(at);
+                thread.start();
+                
+                btnTransmit.setEnabled(false);
+                btnCancel.setEnabled(true);
+                String[] temp=new String[3];
+                temp[0]=mediaURL;
+                temp[1]=txtDestIP.getText();
+                temp[2]=txtDestPort.getText();
+                new Thread(new sendThread(cGUI.socket,temp,3)).start();
+            } catch (IOException ex) {
+                System.err.println(ex);
             }
-            else {
-                mediaURL= "javasound://44100";
-            }
-            at = new AudioTransmit(new MediaLocator( mediaURL),
-                    txtDestIP.getText(),
-                    txtDestPort.getText());
-            thread = new Thread(at);
-            thread.start();
             
-            btnTransmit.setEnabled(false);
-            btnCancel.setEnabled(true);
         }
     }//GEN-LAST:event_btnTransmitActionPerformed
 

@@ -67,7 +67,7 @@ public class ClientGUI extends javax.swing.JFrame {
         btnUpdate = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        btnListen = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         LAudioList = new javax.swing.JTable();
         btnTransmit = new javax.swing.JButton();
@@ -144,7 +144,12 @@ public class ClientGUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Voice Chat", jPanel1);
 
-        jButton5.setText("Listen");
+        btnListen.setText("Listen");
+        btnListen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListenActionPerformed(evt);
+            }
+        });
 
         LAudioList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -169,6 +174,11 @@ public class ClientGUI extends javax.swing.JFrame {
         });
 
         btnUpdateAT.setText("Update");
+        btnUpdateAT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateATActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -177,7 +187,7 @@ public class ClientGUI extends javax.swing.JFrame {
             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnListen, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnUpdateAT)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -188,11 +198,11 @@ public class ClientGUI extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnListen, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTransmit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdateAT, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -218,7 +228,7 @@ public class ClientGUI extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
+            .addGap(0, 317, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Audio Conference", jPanel3);
@@ -263,6 +273,19 @@ public class ClientGUI extends javax.swing.JFrame {
           at.setVisible(true);
           this.btnTransmit.setEnabled(false);
     }//GEN-LAST:event_btnTransmitActionPerformed
+
+    private void btnUpdateATActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateATActionPerformed
+        new Thread(new sendThread(socket, 4)).start();
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnUpdateATActionPerformed
+
+    private void btnListenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListenActionPerformed
+       if( this.LAudioList.getSelectedRow()!=-1){
+           RTPReceive a = new RTPReceive(this.LAudioList.getValueAt(
+               this.LAudioList.getSelectedRow(), 1).toString(),this.LAudioList.getValueAt(
+               this.LAudioList.getSelectedRow(), 2).toString());
+       }
+    }//GEN-LAST:event_btnListenActionPerformed
     
     /**
      * @param args the command line arguments
@@ -271,12 +294,12 @@ public class ClientGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable LAudioList;
+    private javax.swing.JButton btnListen;
     public javax.swing.JButton btnTransmit;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnUpdateAT;
     public javax.swing.JTable clientList;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

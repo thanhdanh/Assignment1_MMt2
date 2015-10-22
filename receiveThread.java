@@ -115,11 +115,58 @@ public class receiveThread implements Runnable {
                         break;
                     }
                     case "LIVE_APPEAR": {
+                        for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
+                            if (sGUI.clientList.getValueAt(i, 1).toString().equals(client.getInetAddress().toString())
+                                    && sGUI.clientList.getValueAt(i, 2).toString().equals(String.valueOf(client.getPort()))) {
+                                sGUI.clientList.setValueAt(mess[1], i, 3);
+                            }
+                        }
                         System.out.println("received Live appear! processing ... ... ...");
-                        receive.close();
-                        client.close();
-                        flag = false;
-                        System.out.println("disconnected!!!");
+                        break;
+                    }
+                    case "NEED_UP_LI": {
+                        System.out.println("received update live request!");
+
+                        String[] temp = new String[sGUI.clientList.getRowCount()];
+                        int j = 0;
+                        for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
+
+                            if (!"".equals(sGUI.clientList.getValueAt(i, 3).toString())) {
+                                temp[j] = sGUI.clientList.getValueAt(i, 3).toString();
+                                j = j + 1;
+                            }
+                        }
+                        System.out.println(j);
+                        if (temp[0] == null) {
+                            temp[0] = "no_list";
+                        }
+                        new Thread(new sendThread(client, temp, 5)).start();
+
+                        break;
+                    }
+                    case "LI_UPDATE": {
+                        String list1 = mess[mess.length - 2];
+                        if (!list1.contains("no_list")) {
+                            System.out.println("danh sach nhan duoc: " + mess[mess.length - 2]);
+                            System.out.println("list1 before split: " + list1);
+                            System.out.println("received live updated list! adding to table ... ... ...");
+                            String[] listArray = list1.split(";");
+                            xoatable(cGUI.LAudioList);
+                            for (int i = 0; i < listArray.length; i++) {
+                                String[] temp = new String[3];
+                                if (!"null".equals(listArray[i])) {
+                                    temp = listArray[i].split(",");
+                                    DefaultTableModel model = (DefaultTableModel) cGUI.LAudioList.getModel();
+                                    model.addRow(new Object[]{i + 1, temp[1], temp[2], temp[0]});
+                                    //System.out.println("listArray[" + i + "]: " + listArray[i]);
+                                }
+                            }
+
+                            //writeInfoFileJTable(cGUI.LAudioList, listArray);
+                            System.out.println("added to table!!!");
+                        } else {
+                            System.out.println("No live list in server");
+                        }
                         break;
                     }
                 }
@@ -160,7 +207,6 @@ public class receiveThread implements Runnable {
         }
 
     }
-  
 
     private void xoarow(JTable table, int row) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
