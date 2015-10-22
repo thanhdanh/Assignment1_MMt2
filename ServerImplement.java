@@ -77,7 +77,7 @@ public class ServerImplement implements Runnable {
         int i = table.getRowCount();
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{Integer.toString(i + 1), so.getInetAddress().toString(),
-            String.valueOf(so.getPort())});
+            String.valueOf(so.getPort()),""});
     }
 
 }

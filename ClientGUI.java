@@ -169,6 +169,11 @@ public class ClientGUI extends javax.swing.JFrame {
         });
 
         btnUpdateAT.setText("Update");
+        btnUpdateAT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateATActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -263,6 +268,19 @@ public class ClientGUI extends javax.swing.JFrame {
           at.setVisible(true);
           this.btnTransmit.setEnabled(false);
     }//GEN-LAST:event_btnTransmitActionPerformed
+
+    private void btnUpdateATActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateATActionPerformed
+        new Thread(new sendThread(socket, 4)).start();
+// TODO add your handling code here:
+    }//GEN-LAST:event_btnUpdateATActionPerformed
+
+    private void btnListenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListenActionPerformed
+       if( this.LAudioList.getSelectedRow()!=-1){
+            new Thread(new RTPReceive(this.LAudioList.getValueAt(
+               this.LAudioList.getSelectedRow(), 1).toString(),this.LAudioList.getValueAt(
+               this.LAudioList.getSelectedRow(), 2).toString())).start();
+       }
+    }//GEN-LAST:event_btnListenActionPerformed
     
     /**
      * @param args the command line arguments
