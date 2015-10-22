@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.media.*;
 import javax.swing.JFrame;
 
-public class RTPReceive extends JFrame implements ControllerListener  {
+public class RTPReceive extends JFrame implements ControllerListener, Runnable  {
 
     String IP;
     String port;
@@ -17,13 +17,11 @@ public class RTPReceive extends JFrame implements ControllerListener  {
 //	}
 
     public RTPReceive(String Ip, String port) {
-        try {
+       
             this.IP = Ip;
             this.port = port;
-            init();
-        } catch (Exception ex) {
-
-        }
+            
+       
     }
 
     Player player = null;
@@ -35,7 +33,7 @@ public class RTPReceive extends JFrame implements ControllerListener  {
         url = new MediaLocator("rtp://"+IP+":"+port+"/audio");
         player = Manager.createPlayer(url);
         player.addControllerListener(this);
-        player.start();
+        //player.start();
         setVisible(true);
     }
 
@@ -62,6 +60,16 @@ public class RTPReceive extends JFrame implements ControllerListener  {
                 add("South", comp);
             }
             validate();
+        }
+    }
+
+    @Override
+    public void run() {
+        try{
+            init();
+            start();
+        }catch(Exception ex){
+            
         }
     }
 }

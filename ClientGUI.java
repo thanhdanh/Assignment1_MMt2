@@ -281,9 +281,9 @@ public class ClientGUI extends javax.swing.JFrame {
 
     private void btnListenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListenActionPerformed
        if( this.LAudioList.getSelectedRow()!=-1){
-           RTPReceive a = new RTPReceive(this.LAudioList.getValueAt(
+            new Thread(new RTPReceive(this.LAudioList.getValueAt(
                this.LAudioList.getSelectedRow(), 1).toString(),this.LAudioList.getValueAt(
-               this.LAudioList.getSelectedRow(), 2).toString());
+               this.LAudioList.getSelectedRow(), 2).toString())).start();
        }
     }//GEN-LAST:event_btnListenActionPerformed
     
