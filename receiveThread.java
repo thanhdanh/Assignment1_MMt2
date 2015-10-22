@@ -114,15 +114,23 @@ public class receiveThread implements Runnable {
                         System.out.println("disconnected!!!");
                         break;
                     }
+<<<<<<< HEAD
                     case "LIVE_APPEAR":  {
+=======
+                    case "LIVE_APPEAR": {
+>>>>>>> origin/master
                         for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
                             if (sGUI.clientList.getValueAt(i, 1).toString().equals(client.getInetAddress().toString())
                                     && sGUI.clientList.getValueAt(i, 2).toString().equals(String.valueOf(client.getPort()))) {
                                 sGUI.clientList.setValueAt(mess[1], i, 3);
                             }
                         }
+<<<<<<< HEAD
                         
                         System.out.println("received Live appear! processing ... ... ...: "+mess[1]);
+=======
+                        System.out.println("received Live appear! processing ... ... ...");
+>>>>>>> origin/master
                         break;
                     }
                     case "NEED_UP_LI": {
@@ -154,8 +162,13 @@ public class receiveThread implements Runnable {
                             String[] listArray = list1.split(";");
                             xoatable(cGUI.LAudioList);
                             for (int i = 0; i < listArray.length; i++) {
+<<<<<<< HEAD
                                 String[] temp ;
                                 if (!"null".equals(listArray[i]) && listArray[i]!=null  ) {
+=======
+                                String[] temp = new String[3];
+                                if (!"null".equals(listArray[i])) {
+>>>>>>> origin/master
                                     temp = listArray[i].split(",");
                                     DefaultTableModel model = (DefaultTableModel) cGUI.LAudioList.getModel();
                                     model.addRow(new Object[]{i + 1, temp[1], temp[2], temp[0]});
@@ -166,6 +179,7 @@ public class receiveThread implements Runnable {
                             //writeInfoFileJTable(cGUI.LAudioList, listArray);
                             System.out.println("added to table!!!");
                         } else {
+<<<<<<< HEAD
                             xoatable(cGUI.LAudioList);
                             System.out.println("No live list in server");
                         }
@@ -179,6 +193,10 @@ public class receiveThread implements Runnable {
                                 sGUI.clientList.setValueAt("", i, 3);
                             }
                         }
+=======
+                            System.out.println("No live list in server");
+                        }
+>>>>>>> origin/master
                         break;
                     }
                 }
@@ -219,10 +237,13 @@ public class receiveThread implements Runnable {
         }
 
     }
+<<<<<<< HEAD
     private void liveDisapper(String ip, String port){
         
         
     }
+=======
+>>>>>>> origin/master
 
     private void xoarow(JTable table, int row) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();

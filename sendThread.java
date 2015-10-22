@@ -79,6 +79,24 @@ public class sendThread implements Runnable {
                 case 4: {
                     ps.println("NEED_UP_LI END");
                     System.out.println("sent from client need update live audio");
+<<<<<<< HEAD
+=======
+                    break;
+                }
+                case 5: {
+                    int i;
+                    String tmp = "";
+
+                    for (i = 0; i < b.length; i++) {
+                        tmp += b[i];
+                        if (i != b.length - 1) {
+                            tmp += ";";
+                        }
+                    }
+                    ps.println("LI_UPDATE " + tmp + " END");
+                    System.out.println("sent from server live list!!!");
+
+>>>>>>> origin/master
                     break;
                 }
                 case 5: {
