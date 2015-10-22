@@ -81,8 +81,6 @@ public class ServerGUI extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 0, 0));
-        setLocation(new java.awt.Point(900, 50));
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -148,7 +146,7 @@ public class ServerGUI extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtPort, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,14 +184,15 @@ public class ServerGUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "STT", "IP Address", "Port"
+                "STT", "IP Address", "Port","Live"
             }
         ));
         jScrollPane2.setViewportView(clientList);
         TableColumnModel tcm = clientList.getColumnModel();
         tcm.getColumn(0).setPreferredWidth(60);     //STT
-        tcm.getColumn(1).setPreferredWidth(220);    //IP Address
+        tcm.getColumn(1).setPreferredWidth(150);    //IP Address
         tcm.getColumn(2).setPreferredWidth(90);    //Port
+        tcm.getColumn(3).setPreferredWidth(60);    //Live
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 51, 0));

@@ -5,7 +5,11 @@
  */
 package main;
 
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.MediaLocator;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -19,8 +23,13 @@ public class ATGui extends javax.swing.JFrame {
     /**
      * Creates new form ATGui
      */
-    public ATGui() {
+   ClientGUI cGUI;
+   AudioTransmit at;
+   public Thread thread;
+    public ATGui(ClientGUI cg) {
         initComponents();
+        cGUI = cg;
+        
     }
 
     /**
@@ -34,10 +43,13 @@ public class ATGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        SourceGroup = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         txtSourceURL = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         btnSourceURL = new javax.swing.JButton();
+        radioMicrophone = new javax.swing.JRadioButton();
+        radioFile = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         txtDestPort = new javax.swing.JTextField();
         txtDestIP = new javax.swing.JTextField();
@@ -48,17 +60,44 @@ public class ATGui extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Source URL", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 2, 12))); // NOI18N
 
         txtSourceURL.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        txtSourceURL.setEnabled(false);
 
         jLabel1.setText("Choose file: ");
 
         btnSourceURL.setText("Browse");
+        btnSourceURL.setEnabled(false);
         btnSourceURL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSourceURLActionPerformed(evt);
+            }
+        });
+
+        SourceGroup.add(radioMicrophone);
+        radioMicrophone.setSelected(true);
+        radioMicrophone.setText("Audio microphone");
+        radioMicrophone.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                radioMicrophoneMouseClicked(evt);
+            }
+        });
+
+        SourceGroup.add(radioFile);
+        radioFile.setText("Audio file");
+        radioFile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                radioFileMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                radioFileMouseExited(evt);
             }
         });
 
@@ -67,18 +106,28 @@ public class ATGui extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSourceURL, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSourceURL)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSourceURL, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSourceURL))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addComponent(radioMicrophone)
+                        .addGap(18, 18, 18)
+                        .addComponent(radioFile)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(radioMicrophone)
+                    .addComponent(radioFile))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSourceURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSourceURL)
@@ -133,6 +182,11 @@ public class ATGui extends javax.swing.JFrame {
 
         btnCancel.setText("Cancel");
         btnCancel.setEnabled(false);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(153, 0, 153));
@@ -147,17 +201,18 @@ public class ATGui extends javax.swing.JFrame {
                 .addComponent(btnTransmit)
                 .addGap(18, 18, 18)
                 .addComponent(btnCancel)
-                .addGap(27, 27, 27))
+                .addGap(29, 29, 29))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
-                        .addComponent(jLabel4)))
+                        .addComponent(jLabel4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -165,15 +220,15 @@ public class ATGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(34, 34, 34)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTransmit)
                     .addComponent(btnCancel))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -188,7 +243,7 @@ public class ATGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSourceURLActionPerformed
     private boolean checkInput() {
-        if (txtSourceURL.getText().isEmpty()) {
+        if (txtSourceURL.getText().isEmpty() && radioFile.isSelected()) {
             JOptionPane.showMessageDialog(null, "You must choose a Source URL");
             return false;
         }
@@ -203,16 +258,55 @@ public class ATGui extends javax.swing.JFrame {
         return true;
     }
     private void btnTransmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransmitActionPerformed
-        if (checkInput()) {
-            
-            new Thread(new AudioTransmit(new MediaLocator("javasound://44100" ),
+        if (checkInput()) { 
+            String mediaURL = "";
+            if (radioFile.isSelected()){
+                mediaURL= "file://"+txtSourceURL.getText();
+            }
+            else {
+                mediaURL= "javasound://44100";
+            }
+            at = new AudioTransmit(new MediaLocator( mediaURL),
                     txtDestIP.getText(),
-                    txtDestPort.getText())).start();     
-           
+                    txtDestPort.getText());
+            thread = new Thread(at);
+            thread.start();
             
+            btnTransmit.setEnabled(false);
+            btnCancel.setEnabled(true);
         }
     }//GEN-LAST:event_btnTransmitActionPerformed
 
+    private void radioMicrophoneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_radioMicrophoneMouseClicked
+        txtSourceURL.setEnabled(false);
+        btnSourceURL.setEnabled(false);
+    }//GEN-LAST:event_radioMicrophoneMouseClicked
+
+    private void radioFileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_radioFileMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_radioFileMouseExited
+
+    private void radioFileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_radioFileMouseClicked
+        txtSourceURL.setEnabled(true);
+        btnSourceURL.setEnabled(true);
+    }//GEN-LAST:event_radioFileMouseClicked
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        btnTransmit.setEnabled(true);
+        btnCancel.setEnabled(false);
+        this.close();
+        
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        cGUI.btnTransmit.setEnabled(true);
+    }//GEN-LAST:event_formWindowClosing
+    public void close(){       
+        at.stop();      
+        thread.stop();
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -241,14 +335,15 @@ public class ATGui extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ATGui().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ATGui(ClientGUI).setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup SourceGroup;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSourceURL;
     private javax.swing.JButton btnTransmit;
@@ -258,6 +353,8 @@ public class ATGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JRadioButton radioFile;
+    private javax.swing.JRadioButton radioMicrophone;
     private javax.swing.JTextField txtDestIP;
     private javax.swing.JTextField txtDestPort;
     private javax.swing.JTextField txtSourceURL;

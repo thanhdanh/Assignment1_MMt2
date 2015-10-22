@@ -27,7 +27,7 @@ public class receiveThread implements Runnable {
     ServerGUI sGUI;
     ClientGUI cGUI;
     public Thread thread = null;
-    
+
     public receiveThread(Socket so) {
         client = so;
     }
@@ -35,7 +35,7 @@ public class receiveThread implements Runnable {
     public receiveThread(Socket so, ServerGUI sgui) {
         this.client = so;
         this.sGUI = sgui;
-       // this.thisTable = sGUI.clientList;
+        // this.thisTable = sGUI.clientList;
     }
 
     public receiveThread(Socket so, ClientGUI cgui) {
@@ -56,57 +56,66 @@ public class receiveThread implements Runnable {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
     }
-  
+
     @Override
     public void run() {
-    	BufferedReader receive = null;
+        BufferedReader receive = null;
         String[] mess = new String[100];
         try {
-			receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            receive = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         boolean flag = true;
-    	try {
-            
-            String tmp=new String();
-            while(flag){   
-                tmp= receive.readLine();
+        try {
+
+            String tmp = new String();
+            while (flag) {
+                tmp = receive.readLine();
 //                if(tmp.isEmpty()){
 //                    new Thread(new sendThread(socket, 0)).start();
 //                    break;
 //                };               
                 mess = tmp.split(" ");
-                System.out.println(">>>>>>>tmp:"+tmp +" and mess[0]:"+mess[0] );
+                System.out.println(">>>>>>>tmp:" + tmp + " and mess[0]:" + mess[0]);
                 switch (mess[0]) {
-                    case "NEED_UPDATE": {                        
-                    	System.out.println("received update request! processing ... ... ...");
+                    case "NEED_UPDATE": {
+                        System.out.println("received update request! processing ... ... ...");
                         int i;
                         String[] list = new String[sGUI.clientList.getRowCount()];
                         for (i = 0; i < sGUI.clientList.getRowCount(); i++) {
-                            list[i] = sGUI.clientList.getValueAt(i, 1).toString();                        }                        
+                            list[i] = sGUI.clientList.getValueAt(i, 1).toString();
+                        }
                         new Thread(new sendThread(client, list, 1)).start();
                         System.out.println("updated list sent!!!");
                         break;
                     }
-                    case "UPDATE": {                      
-                        String list1 = mess[mess.length-2];
-                    	System.out.println("danh sach nhan duoc: "+mess[mess.length-2]);
-                        System.out.println("list1 before split: "+list1);      
+                    case "UPDATE": {
+                        String list1 = mess[mess.length - 2];
+                        System.out.println("danh sach nhan duoc: " + mess[mess.length - 2]);
+                        System.out.println("list1 before split: " + list1);
                         System.out.println("received updated list! adding to table ... ... ...");
                         String[] listArray = list1.split(";");
-                        for (int i=0;i<listArray.length;i++){
-                        	System.out.println("listArray["+i+"]: "+listArray[i]);
-                        	}
-                        xoatable(cGUI.clientList);                        
+                        for (int i = 0; i < listArray.length; i++) {
+                            System.out.println("listArray[" + i + "]: " + listArray[i]);
+                        }
+                        xoatable(cGUI.clientList);
                         writeInfoFileJTable(cGUI.clientList, listArray);
                         System.out.println("added to table!!!");
                         break;
                     }
-                    case "BYE":{
-                    	saybye2client(client.getInetAddress().toString());
-                    	System.out.println("client "+client.getInetAddress()+ " is disconnecting ... ... ...");
+                    case "BYE": {
+                        saybye2client(client.getInetAddress().toString());
+                        System.out.println("client " + client.getInetAddress() + " is disconnecting ... ... ...");
+                        receive.close();
+                        client.close();
+                        flag = false;
+                        System.out.println("disconnected!!!");
+                        break;
+                    }
+                    case "LIVE_APPEAR": {
+                        System.out.println("received Live appear! processing ... ... ...");
                         receive.close();
                         client.close();
                         flag = false;
@@ -115,9 +124,9 @@ public class receiveThread implements Runnable {
                     }
                 }
             }
-           
+
         } catch (Exception ex) {
-        	flag = false;
+            flag = false;
             if (client.getLocalPort() == 5000) {
                 // client down
                 saybye2client(client.getRemoteSocketAddress().toString());
@@ -128,8 +137,7 @@ public class receiveThread implements Runnable {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                }
-            else {// server down
+            } else {// server down
                 JOptionPane
                         .showMessageDialog(
                                 cGUI,
@@ -139,22 +147,23 @@ public class receiveThread implements Runnable {
                                 + "we're sorry for this\n");
 
             }
-            }
-    	}
-
-
-private void saybye2client(String a) {
-    String cliadd;
-    cliadd = a;
-    for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
-        if (cliadd.equals(sGUI.clientList.getValueAt(i, 1).toString())) {
-            xoarow(sGUI.clientList, i);
         }
     }
-    
-}
-private void xoarow(JTable table, int row) {
-    DefaultTableModel model = (DefaultTableModel) table.getModel();
-    model.removeRow(row);
-}
+
+    private void saybye2client(String a) {
+        String cliadd;
+        cliadd = a;
+        for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
+            if (cliadd.equals(sGUI.clientList.getValueAt(i, 1).toString())) {
+                xoarow(sGUI.clientList, i);
+            }
+        }
+
+    }
+  
+
+    private void xoarow(JTable table, int row) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.removeRow(row);
+    }
 }

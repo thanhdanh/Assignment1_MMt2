@@ -32,20 +32,20 @@ public class sendThread implements Runnable {
         this.client = so;
         command = cmd;
     }
-
+   
     @Override
     public void run() {
         try {
-        	PrintStream ps;
-        	ps = new PrintStream(client.getOutputStream());
-        	switch (command) {
-                
+            PrintStream ps;
+            ps = new PrintStream(client.getOutputStream());
+            switch (command) {
+
                 case 0: {
                     ps.println("NEED_UPDATE END ");
                     System.out.println("Send NEED_UPDATE request");
                     break;
                 }
-                  case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
+                case 1: { // CASE UPDATE CLIENT LIST-- sent FROM server 
                     int i;
                     String tmp = "";
                     for (i = 0; i < b.length; i++) {
@@ -54,17 +54,21 @@ public class sendThread implements Runnable {
                             tmp += ";";
                         }
                     }
-                    ps.println("UPDATE "+ tmp+ " END ");
-                    
+                    ps.println("UPDATE " + tmp + " END ");
+
                     break;
                 }
-                 case 2:{
-                	 ps.println("BYE END"); 
-                	 break;
-                  }
+                case 2: {
+                    ps.println("BYE END");
+                    break;
+                }
+                case 3: {
+                    ps.println("LIVE_APPEAR END");
+                    break;
+                }
 
             }
-        
+
         } catch (Exception e) {
 
         }

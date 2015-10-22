@@ -23,17 +23,18 @@ public class ClientGUI extends javax.swing.JFrame {
      
     public ClientGUI(Socket so)  {
         initComponents();
+        socket =so;
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent arg0) {
                 System.out.println("tat bang nut x");
-                new Thread(new sendThread(so, 2)).start();
+                new Thread(new sendThread(socket, 2)).start();
                 System.exit(0);
             }
         });
         
         socket = so;
-        this.setLocation(500, 100);
+        this.setLocation(0, 0);
         this.setResizable(false);
         this.setVisible(true);
         
@@ -258,7 +259,7 @@ public class ClientGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnTransmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransmitActionPerformed
-          ATGui at= new ATGui();   
+          ATGui at= new ATGui(this);   
           at.setVisible(true);
           this.btnTransmit.setEnabled(false);
     }//GEN-LAST:event_btnTransmitActionPerformed
@@ -270,7 +271,7 @@ public class ClientGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable LAudioList;
-    private javax.swing.JButton btnTransmit;
+    public javax.swing.JButton btnTransmit;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnUpdateAT;
     public javax.swing.JTable clientList;
