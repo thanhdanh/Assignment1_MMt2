@@ -2,8 +2,16 @@ package main;
 
 //class nhan am thanh
 import java.awt.*;
+<<<<<<< HEAD
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+=======
+<<<<<<< HEAD
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+=======
+>>>>>>> origin/master
+>>>>>>> origin/master
 import java.io.IOException;
 
 import javax.media.*;
@@ -19,17 +27,37 @@ public class RTPReceive extends JFrame implements ControllerListener, Runnable {
 //	}
 
     public RTPReceive(String Ip, String port) {
+<<<<<<< HEAD
 
         this.IP = Ip;
         this.port = port;
         addWindowListener(new WindowAdapter() {
+=======
+       
+            this.IP = Ip;
+<<<<<<< HEAD
+            this.port = port;        
+            addWindowListener(new WindowAdapter() {
+>>>>>>> origin/master
             @Override
             public void windowClosing(WindowEvent arg0) {
                 System.out.println("Stop Player");
                 stop();
+<<<<<<< HEAD
             }
         });
 
+=======
+                //new Thread(new sendThread(socket, 2)).start();
+               // System.exit(0);
+            }
+        });
+=======
+            this.port = port;
+            
+>>>>>>> origin/master
+       
+>>>>>>> origin/master
     }
 
     Player player = null;
@@ -58,6 +86,10 @@ public class RTPReceive extends JFrame implements ControllerListener, Runnable {
         player.close();
     }
 
+<<<<<<< HEAD
+    @Override
+=======
+>>>>>>> origin/master
     public synchronized void controllerUpdate(ControllerEvent event) {
         if (event instanceof RealizeCompleteEvent) {
             Component comp;

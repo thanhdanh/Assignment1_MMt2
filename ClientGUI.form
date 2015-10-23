@@ -133,7 +133,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+<<<<<<< HEAD
                       <Component id="btnCall" min="-2" pref="101" max="-2" attributes="0"/>
+=======
+                      <Component id="jButton1" min="-2" pref="101" max="-2" attributes="0"/>
+>>>>>>> origin/master
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnUpdate" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
@@ -146,7 +150,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
+<<<<<<< HEAD
                           <Component id="btnCall" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+=======
+                          <Component id="jButton1" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
+>>>>>>> origin/master
                           <Component id="btnUpdate" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -176,6 +184,7 @@
                 </Component>
               </SubComponents>
             </Container>
+<<<<<<< HEAD
             <Component class="javax.swing.JButton" name="btnCall">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Call"/>
@@ -183,6 +192,12 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCallActionPerformed"/>
               </Events>
+=======
+            <Component class="javax.swing.JButton" name="jButton1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Call"/>
+              </Properties>
+>>>>>>> origin/master
             </Component>
             <Component class="javax.swing.JButton" name="btnUpdate">
               <Properties>
@@ -227,7 +242,11 @@
                       <Component id="jScrollPane3" alignment="0" pref="456" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+<<<<<<< HEAD
                           <Component id="btnListen" min="-2" pref="95" max="-2" attributes="0"/>
+=======
+                          <Component id="jButton5" min="-2" pref="95" max="-2" attributes="0"/>
+>>>>>>> origin/master
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="btnUpdateAT" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -240,7 +259,11 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
+<<<<<<< HEAD
                               <Component id="btnListen" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+=======
+                              <Component id="jButton5" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+>>>>>>> origin/master
                               <Component id="btnTransmit" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
                               <Component id="btnUpdateAT" min="-2" pref="38" max="-2" attributes="0"/>
                           </Group>
@@ -251,6 +274,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
+<<<<<<< HEAD
                 <Component class="javax.swing.JButton" name="btnListen">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Listen"/>
@@ -258,6 +282,12 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListenActionPerformed"/>
                   </Events>
+=======
+                <Component class="javax.swing.JButton" name="jButton5">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Listen"/>
+                  </Properties>
+>>>>>>> origin/master
                 </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane3">
                   <AuxValues>

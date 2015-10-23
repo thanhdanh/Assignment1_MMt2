@@ -79,9 +79,46 @@ public class sendThread implements Runnable {
                 case 4: {
                     ps.println("NEED_UP_LI END");
                     System.out.println("sent from client need update live audio");
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> origin/master
                     break;
                 }
+                case 5: {
+                    int i;
+                    String tmp = "";
+
+                    for (i = 0; i < b.length; i++) {
+                        tmp += b[i];
+                        if (i != b.length - 1) {
+                            tmp += ";";
+                        }
+                    }
+                    ps.println("LI_UPDATE " + tmp + " END");
+                    System.out.println("sent from server live list!!!");
+
+>>>>>>> origin/master
+                    break;
+                }
+<<<<<<< HEAD
+                case 6:{                   
+                    ps.println("LIVE_DISAPPEAR END");
+                    break;
+                }
+                case 7:{
+                    ps.println("CALL END");
+                    break;
+                }
+                case 8:{
+                    ps.println("OK END");
+                    break;
+                }
+                case 9:{
+                    ps.println("NO END");
+=======
                 case 5: {
                     int i;
                     String tmp = "";
@@ -99,18 +136,7 @@ public class sendThread implements Runnable {
                 }
                 case 6:{                   
                     ps.println("LIVE_DISAPPEAR END");
-                    break;
-                }
-                case 7:{
-                    ps.println("CALL END");
-                    break;
-                }
-                case 8:{
-                    ps.println("OK END");
-                    break;
-                }
-                case 9:{
-                    ps.println("NO END");
+>>>>>>> origin/master
                     break;
                 }
                     
