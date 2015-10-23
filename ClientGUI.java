@@ -7,7 +7,11 @@ package main;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -20,10 +24,10 @@ public class ClientGUI extends javax.swing.JFrame {
      * Creates new form ClientGUI
      */
     public Socket socket;
-     
-    public ClientGUI(Socket so)  {
+
+    public ClientGUI(Socket so) {
         initComponents();
-        socket =so;
+        socket = so;
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent arg0) {
@@ -32,17 +36,14 @@ public class ClientGUI extends javax.swing.JFrame {
                 System.exit(0);
             }
         });
-        
+
         socket = so;
         this.setLocation(0, 0);
         this.setResizable(false);
         this.setVisible(true);
-        
+
     }
-    
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,7 +64,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         clientList = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        btnCall = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -109,7 +110,12 @@ public class ClientGUI extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(clientList);
 
-        jButton1.setText("Call");
+        btnCall.setText("Call");
+        btnCall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCallActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -124,7 +130,7 @@ public class ClientGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCall, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnUpdate)
                 .addGap(54, 54, 54))
@@ -135,7 +141,7 @@ public class ClientGUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCall, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -202,7 +208,7 @@ public class ClientGUI extends javax.swing.JFrame {
                     .addComponent(btnTransmit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdateAT, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -228,7 +234,7 @@ public class ClientGUI extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Audio Conference", jPanel3);
@@ -269,9 +275,9 @@ public class ClientGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnTransmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransmitActionPerformed
-          ATGui at= new ATGui(this);   
-          at.setVisible(true);
-          this.btnTransmit.setEnabled(false);
+        ATGui at = new ATGui(this);
+        at.setVisible(true);
+        this.btnTransmit.setEnabled(false);
     }//GEN-LAST:event_btnTransmitActionPerformed
 
     private void btnUpdateATActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateATActionPerformed
@@ -280,26 +286,46 @@ public class ClientGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateATActionPerformed
 
     private void btnListenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListenActionPerformed
-       if( this.LAudioList.getSelectedRow()!=-1){
+        if (this.LAudioList.getSelectedRow() != -1) {
             new Thread(new RTPReceive(this.LAudioList.getValueAt(
-               this.LAudioList.getSelectedRow(), 1).toString(),this.LAudioList.getValueAt(
-               this.LAudioList.getSelectedRow(), 2).toString())).start();
-       }
+                    this.LAudioList.getSelectedRow(), 1).toString(), this.LAudioList.getValueAt(
+                            this.LAudioList.getSelectedRow(), 2).toString())).start();
+        }
     }//GEN-LAST:event_btnListenActionPerformed
-    
+
+    private void btnCallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCallActionPerformed
+        if (this.clientList.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "there's no one to call right now!!! please press Update button to refresh!!!");
+        } else {
+            if (this.clientList.getSelectedRow() != -1) {
+                try {
+                    System.out.println("co vao duoc day khong?");
+                    System.out.println(this.clientList.getValueAt(
+                            this.clientList.getSelectedRow(), 1).toString());
+                    Socket a;
+                    a = new Socket(this.clientList.getValueAt(
+                            this.clientList.getSelectedRow(), 1).toString(), 5678);
+                    new Thread(new sendThread(a,7)).start();
+                } catch (IOException ex) {
+                    Logger.getLogger(ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCallActionPerformed
+
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable LAudioList;
+    private javax.swing.JButton btnCall;
     private javax.swing.JButton btnListen;
     public javax.swing.JButton btnTransmit;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnUpdateAT;
     public javax.swing.JTable clientList;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -2,12 +2,14 @@ package main;
 
 //class nhan am thanh
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.media.*;
 import javax.swing.JFrame;
 
-public class RTPReceive extends JFrame implements ControllerListener, Runnable  {
+public class RTPReceive extends JFrame implements ControllerListener, Runnable {
 
     String IP;
     String port;
@@ -17,20 +19,26 @@ public class RTPReceive extends JFrame implements ControllerListener, Runnable  
 //	}
 
     public RTPReceive(String Ip, String port) {
-       
-            this.IP = Ip;
-            this.port = port;
-            
-       
+
+        this.IP = Ip;
+        this.port = port;
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+                System.out.println("Stop Player");
+                stop();
+            }
+        });
+
     }
 
     Player player = null;
 
     public void init() throws NoPlayerException, IOException {
         setLayout(new BorderLayout());
-
         MediaLocator url;
-        url = new MediaLocator("rtp://"+IP+":"+port+"/audio");
+        System.out.println(IP);
+        url = new MediaLocator("rtp://" + IP + ":" + port + "/audio");
         player = Manager.createPlayer(url);
         player.addControllerListener(this);
         //player.start();
@@ -65,11 +73,11 @@ public class RTPReceive extends JFrame implements ControllerListener, Runnable  
 
     @Override
     public void run() {
-        try{
+        try {
             init();
             start();
-        }catch(Exception ex){
-            
+        } catch (Exception ex) {
+
         }
     }
 }

@@ -79,6 +79,7 @@ public class sendThread implements Runnable {
                 case 4: {
                     ps.println("NEED_UP_LI END");
                     System.out.println("sent from client need update live audio");
+
                     break;
                 }
                 case 5: {
@@ -96,6 +97,23 @@ public class sendThread implements Runnable {
 
                     break;
                 }
+                case 6:{                   
+                    ps.println("LIVE_DISAPPEAR END");
+                    break;
+                }
+                case 7:{
+                    ps.println("CALL END");
+                    break;
+                }
+                case 8:{
+                    ps.println("OK END");
+                    break;
+                }
+                case 9:{
+                    ps.println("NO END");
+                    break;
+                }
+                    
 
             }
 

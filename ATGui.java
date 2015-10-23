@@ -306,7 +306,12 @@ public class ATGui extends javax.swing.JFrame {
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         btnTransmit.setEnabled(true);
         btnCancel.setEnabled(false);
-        this.close();
+        this.close();        
+         try {
+            new Thread(new sendThread(cGUI.socket,6)).start();
+         }catch(Exception ex){
+             JOptionPane.showMessageDialog(null, ex);
+         }   
         
     }//GEN-LAST:event_btnCancelActionPerformed
 

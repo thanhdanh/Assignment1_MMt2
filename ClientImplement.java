@@ -5,6 +5,8 @@
  */
 package main;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.JOptionPane;
 /**
@@ -15,6 +17,7 @@ public class ClientImplement {
     String ServerIP;
     static public Socket socket;
     static public ClientGUI cGUI;
+    static public ServerSocket clientListener;
    
     public ClientImplement(String IP) {
 		
@@ -22,10 +25,13 @@ public class ClientImplement {
             ServerIP = IP;
             socket = new Socket(ServerIP, 5000);
             cGUI = new ClientGUI(socket);
+            clientListener = new ServerSocket(5678);
             
             new Thread(new receiveThread(socket, cGUI)).start();
             new Thread(new sendThread(socket, 0)).start();            
-            
+            new Thread(new ServerListeningThread(clientListener, cGUI)).start();
+            System.out.println("da tao thread nghe cho client khac call");
+                
             JOptionPane.showMessageDialog(null, "successfully connected to server!!!");
 
         } catch (Exception e) {
@@ -33,4 +39,27 @@ public class ClientImplement {
             JOptionPane.showMessageDialog(null, "can't connect to server!");
         }
     }
+}
+class ServerListeningThread implements Runnable {
+
+    ServerSocket server;
+    ClientGUI cGUI;
+
+    ServerListeningThread(ServerSocket s, ClientGUI i) {
+        server = s;
+        cGUI = i;
+    }
+
+    public void run() {
+        while (true) {
+            try {
+                Socket Client = server.accept();
+                System.out.println("Create receiveThread on " + server.getLocalPort() + "...");
+                new Thread(new receiveThread(Client,cGUI)).start();
+            } catch (IOException e) {
+                System.exit(0);
+            }
+        }
+    }
+
 }

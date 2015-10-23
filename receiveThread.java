@@ -5,13 +5,16 @@
  */
 package main;
 
+import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -48,7 +51,9 @@ public class receiveThread implements Runnable {
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for (int i = 0; i < list.length; i++) {
-            model.addRow(new Object[]{i + 1, list[i]});
+            if (!"same".equals(list[i])) {
+                model.addRow(new Object[]{table.getRowCount() + 1, list[i]});
+            }
         }
     }
 
@@ -69,23 +74,27 @@ public class receiveThread implements Runnable {
         }
         boolean flag = true;
         try {
-
             String tmp = new String();
             while (flag) {
                 tmp = receive.readLine();
-//                if(tmp.isEmpty()){
-//                    new Thread(new sendThread(socket, 0)).start();
-//                    break;
-//                };               
                 mess = tmp.split(" ");
+                System.out.println("received from " + client + " request " + mess[0]);
                 System.out.println(">>>>>>>tmp:" + tmp + " and mess[0]:" + mess[0]);
                 switch (mess[0]) {
                     case "NEED_UPDATE": {
                         System.out.println("received update request! processing ... ... ...");
                         int i;
                         String[] list = new String[sGUI.clientList.getRowCount()];
+                        String compare;
                         for (i = 0; i < sGUI.clientList.getRowCount(); i++) {
-                            list[i] = sGUI.clientList.getValueAt(i, 1).toString();
+                            compare = sGUI.clientList.getValueAt(i, 1).toString() + ":" + sGUI.clientList.getValueAt(i, 2).toString();
+                            System.out.println(compare);
+                            if (!compare.equals(client.getRemoteSocketAddress().toString())) {
+                                list[i] = sGUI.clientList.getValueAt(i, 1).toString();
+                            } else {
+                                list[i] = "same";
+                            }
+                            System.out.println(list[i]);
                         }
                         new Thread(new sendThread(client, list, 1)).start();
                         System.out.println("updated list sent!!!");
@@ -117,16 +126,16 @@ public class receiveThread implements Runnable {
                     case "LIVE_APPEAR": {
                         for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
                             if (sGUI.clientList.getValueAt(i, 1).toString().equals(client.getInetAddress().toString())
-                                    && sGUI.clientList.getValueAt(i, 2).toString().equals(String.valueOf(client.getPort()))) {
+                                    && sGUI.clientList.getValueAt(i, 2).toString().equals(
+                                            String.valueOf(client.getPort()))) {
                                 sGUI.clientList.setValueAt(mess[1], i, 3);
                             }
                         }
-                        System.out.println("received Live appear! processing ... ... ...");
+                        System.out.println("received Live appear! processing ... ... ...: " + mess[1]);
                         break;
                     }
                     case "NEED_UP_LI": {
                         System.out.println("received update live request!");
-
                         String[] temp = new String[sGUI.clientList.getRowCount()];
                         int j = 0;
                         for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
@@ -141,7 +150,6 @@ public class receiveThread implements Runnable {
                             temp[0] = "no_list";
                         }
                         new Thread(new sendThread(client, temp, 5)).start();
-
                         break;
                     }
                     case "LI_UPDATE": {
@@ -161,18 +169,61 @@ public class receiveThread implements Runnable {
                                     //System.out.println("listArray[" + i + "]: " + listArray[i]);
                                 }
                             }
-
                             //writeInfoFileJTable(cGUI.LAudioList, listArray);
                             System.out.println("added to table!!!");
                         } else {
+                            xoatable(cGUI.LAudioList);
                             System.out.println("No live list in server");
                         }
                         break;
                     }
+                    case "LIVE_DISAPPEAR": {
+                        for (int i = 0; i < sGUI.clientList.getRowCount(); i++) {
+                            if (sGUI.clientList.getValueAt(i, 1).toString().equals(client.getInetAddress().toString())
+                                    && sGUI.clientList.getValueAt(i, 2).toString().equals(String.valueOf(client.getPort()))) {
+                                sGUI.clientList.setValueAt("", i, 3);
+                            }
+                        }
+                        System.out.println("No live list in server");
+                        break;
+                    }
+                    case "CALL": {
+                        InetAddress b;
+                        int a = JOptionPane.showConfirmDialog(cGUI, "do you accept call from " + client + " ???", "Call Alert!!!", JOptionPane.YES_NO_OPTION);
+                        b = InetAddress.getLocalHost();
+                        switch (a) {
+                            case JOptionPane.YES_OPTION: {
+                                System.out.println("accepted!");
+                                // tra loi cho client kia accepted                             
+                                new Thread(new sendThread(client, 8)).start();
+                                // tao thread nghe nhan
+                                new Thread(new RTPReceive(client.getInetAddress().toString(), "12468")).start();
+                                //new Thread(new RTPSend(StringOf(b),"12478")).start();
+
+                                break;
+                            }
+                            case JOptionPane.NO_OPTION: {
+                                System.out.println("refused!");
+                                // tra loi cho client kia refused
+                                new Thread(new sendThread(client, 9)).start();
+                                //do nothing
+                                break;
+                            }
+                        }
+                        System.out.println("gia tri tra ve cua a: " + a);
+                        break;
+                    }
+                    case "OK": {
+                        System.out.println("received OK from other client!!! setting up calling ... ... ...");
+                        new Thread(new RTPReceive(client.getInetAddress().toString(), "24680")).start();
+                        new Thread(new RTPSend(String.valueOf(client.getRemoteSocketAddress()),"24682")).start();
+                        System.out.println("called " + client.getRemoteSocketAddress() + " from" + client.getInetAddress());
+
+                    }
                 }
             }
 
-        } catch (Exception ex) {
+        } catch (IOException | HeadlessException ex) {
             flag = false;
             if (client.getLocalPort() == 5000) {
                 // client down
@@ -205,6 +256,10 @@ public class receiveThread implements Runnable {
                 xoarow(sGUI.clientList, i);
             }
         }
+
+    }
+
+    private void liveDisapper(String ip, String port) {
 
     }
 
