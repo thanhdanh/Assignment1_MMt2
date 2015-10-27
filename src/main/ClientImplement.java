@@ -5,10 +5,13 @@
  */
 package main;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -35,7 +38,15 @@ public class ClientImplement {
             new Thread(new sendThread(socket, name, 10)).start();
             Thread.sleep(100);
             new Thread(new sendThread(socket, 0)).start();
-            
+            Timer timer = new Timer(3000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                     System.out.println("need update!!!");
+                    new Thread(new sendThread(socket, 0)).start();
+                }
+            });
+            timer.setRepeats(true); 
+            timer.start();
             new Thread(new ServerListeningThread(clientListener, cGUI)).start();
             System.out.println("da tao thread nghe cho client khac call");
 

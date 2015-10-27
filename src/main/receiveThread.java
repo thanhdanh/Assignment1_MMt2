@@ -19,6 +19,7 @@ import javax.swing.DefaultListModel;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -34,7 +35,8 @@ public class receiveThread implements Runnable {
     ClientGUI cGUI;
     public Thread thread = null;
     public callAlertForm cA;
-
+    
+    
     public receiveThread(Socket so) {
         client = so;
     }
@@ -256,9 +258,15 @@ public class receiveThread implements Runnable {
                     }
                     case "ACCEPT": {
                         String b;
-                        String name = mess[1];
+                        String name = mess[1];                        
                         DefaultListModel table = new DefaultListModel();
                         table.addElement(name);
+                        int i=0;
+                        
+                        while(i< cGUI.listConf.getModel().getSize()){
+                            table.addElement(cGUI.listConf.getModel().getElementAt(i));
+                            i++;
+                        }
                         cGUI.listConf.setModel(table);
                         break;
                     }
