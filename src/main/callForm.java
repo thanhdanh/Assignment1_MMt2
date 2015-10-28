@@ -6,8 +6,10 @@
 package main;
 
 import java.net.Socket;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -21,9 +23,17 @@ public class callForm extends javax.swing.JFrame implements Runnable{
     String name;
     Socket client;
     boolean flag = true;
-
+    public callForm(){
+        initComponents();
+        
+        URL url = callForm.class.getResource("/Image/loading.gif");
+        ImageIcon imageIcon = new ImageIcon(url);
+        
+        
+    }
     public callForm(String name, Socket a) {
         initComponents();
+        
         this.name = name;
         this.client = a;
         jLabel2.setText("Calling to " + name);
@@ -43,6 +53,7 @@ public class callForm extends javax.swing.JFrame implements Runnable{
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        LblLoading = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 0));
@@ -52,7 +63,7 @@ public class callForm extends javax.swing.JFrame implements Runnable{
         jLabel2.setForeground(new java.awt.Color(0, 153, 51));
         jLabel2.setText("Calling to");
 
-        jButton2.setText("Cancel");
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Cancel.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -63,31 +74,37 @@ public class callForm extends javax.swing.JFrame implements Runnable{
         jLabel1.setForeground(new java.awt.Color(204, 0, 0));
         jLabel1.setText("jLabel1");
 
+        LblLoading.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/loading_1.gif"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(88, 88, 88))
+                .addGap(65, 65, 65))
             .addGroup(layout.createSequentialGroup()
-                .addGap(129, 129, 129)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(96, 96, 96)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LblLoading)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(31, 31, 31)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(LblLoading)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -129,12 +146,13 @@ public class callForm extends javax.swing.JFrame implements Runnable{
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new callForm().setVisible(true);
+                new callForm().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LblLoading;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
